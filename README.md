@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Net Monitor App — INY1105
 
 **Infraestructura de Aplicaciones I — Duoc UC**  
@@ -108,4 +109,6 @@ docker inspect <container_id>
 ---
 
 *Aplicación provista por el docente — No modificar `app/app.py` ni `app/templates/index.html`*
+=======
+>>>>>>> 2456fe4977ca14d133a50b652983c95f193ad23c
 # netmonitor
