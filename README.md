@@ -25,17 +25,17 @@ Muestra métricas del servidor donde se ejecuta:
 ```
 netmonitor/
 ├── app/
-│   ├── app.py              ← Aplicación Flask (NO modificar)
-│   ├── requirements.txt    ← Dependencias Python (NO modificar)
+│   ├── app.py              ← Aplicación Flask 
+│   ├── requirements.txt    ← Dependencias Python 
 │   └── templates/
-│       └── index.html      ← Dashboard web (NO modificar)
+│       └── index.html      ← Dashboard web 
 ├── nginx/
-│   ├── nginx.conf          ← Configuración NGINX (puedes ajustar timeouts)
-│   └── Dockerfile          ← Dockerfile NGINX — TÚ debes completarlo (Encargo 4)
+│   ├── nginx.conf          ← Configuración NGINX 
+│   └── Dockerfile          ← Dockerfile NGINX 
 ├── .github/
 │   └── workflows/
-│       └── ci-cd.yml       ← Pipeline CI/CD — TÚ debes configurar secrets (Encargo 5)
-├── Dockerfile              ← Dockerfile app — TÚ debes completarlo (Encargo 3)
+│       └── ci-cd.yml       ← Pipeline CI/CD 
+├── Dockerfile              ← Dockerfile app 
 └── README.md
 ```
 
