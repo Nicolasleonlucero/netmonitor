@@ -1,0 +1,69 @@
+name: CI/CD Pipeline Net Monitor
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Paso 1: Checkout del repositorio
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
+      # Paso 2: Login a Docker Hub
+      - name: Login a Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Paso 3: Build imagen app
+      - name: Build imagen app
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/netmonitor-app:latest -t ${{ secrets.DOCKERHUB_USERNAME }}/netmonitor-app:${{ github.sha }} .
+
+      # Paso 4: Build imagen nginx
+      - name: Build imagen nginx
+        run: |
+          docker build ./nginx -t ${{ secrets.DOCKERHUB_USERNAME }}/netmonitor-nginx:latest
+
+      # Paso 5: Push imágenes a Docker Hub
+      - name: Push imágenes a Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/netmonitor-app --all-tags
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/netmonitor-nginx:latest
+
+      # Paso 6: Health Check HTTP (prueba infraestructura)
+      - name: Health Check HTTP
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+        run: |
+          curl -f http://$EC2_PUBLIC_IP/
+
+      # Paso 7: Latencia de red (prueba infraestructura)
+      - name: Latencia de red
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+        run: |
+          curl -w '%{time_total}\n' -o /dev/null -s http://$EC2_PUBLIC_IP/
+
+      # Paso 8: Validación de puerto (prueba infraestructura)
+      - name: Validación de puerto
+        env:
+          EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+        run: |
+          nc -zv $EC2_PUBLIC_IP 80
+
+      # Paso 9: Deploy a ECS
+      - name: Deploy a ECS
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_DEFAULT_REGION: us-east-1 
+        run: |
+          aws ecs update-service --cluster netmonitor --service netmonitor-svc --force-new-deployment
