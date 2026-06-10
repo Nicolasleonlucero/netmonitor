@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
 # Metadatos de la imagen
-LABEL maintainer="docente-iny1105@duoc.cl"
+LABEL maintainer="Nicolas Ignacio Leon Lucero"
 LABEL description="Net Monitor App — monitoreo de infraestructura de red"
 LABEL version="1.0"
 
