@@ -106,7 +106,7 @@ docker inspect <container_id>
 # Buscar sección "Mounts" en la salida
 ```
 
----
+--- 
 
 *Aplicación provista por el docente — No modificar `app/app.py` ni `app/templates/index.html`*
 =======
